@@ -15,6 +15,6 @@ A = np.array([[60.30,58.37,17.40,880,8800,268,233000,7,2,8],
 f = np.array([[1],[2],[3],[4],[5],[6],[7],[8],[9],[10]])
 
 A_inv = np.linalg.inv(A)
-a = np.dot(A_inv, np.dot(f))
+a = np.dot(A_inv, f)
 
 print(a)
