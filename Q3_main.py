@@ -21,6 +21,6 @@ a = np.dot(A_inv, f)
 
 print(a)
 
-verfication = np.dot(boeingvariant,a)
+verification = np.dot(boeingvariant,a)
 
 print(verification)
