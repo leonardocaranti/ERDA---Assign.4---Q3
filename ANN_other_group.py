@@ -43,8 +43,9 @@ class NeuralNetwork:
 
             i=0
             for weights in self.second_weights:
-                error= np.sqrt((training_outputs-output_secondlayer[i])*(training_outputs-output_secondlayer[i])) #Error calculated using least squares
-                if iteration%100 ==0:
+                #error= np.sqrt((training_outputs-output_secondlayer[i])*(training_outputs-output_secondlayer[i])) #Error calculated using least squares
+                error = np.array(training_outputs-output_secondlayer[i])
+                if iteration%100 == 0:
                     print("Error = ", error)
                 adjustments = np.dot(inputs.T, error * self.sigmoid_derivative(output_secondlayer[i]))
                 newsecondweights.append(weights+adjustments)
@@ -114,9 +115,10 @@ print(neural_network.second_weights)
 """
 
 # This is the data of plane 1, so if the model is trained correctly it should output a [1.]
-data=np.array([[60.30,58.37,17.40,880,8800,268,233000,7,2,8]]) 
+data=np.array([[64.44,70.67,19.40,920,11500,408,390100,9,4,5]]) 
 training_data=np.append(training_data,data,axis=0)
-training_inputs=StandardScaler().fit_transform(training_data)
-data=training_inputs[-1]
+#training_inputs=StandardScaler().fit_transform(training_data)
+data=StandardScaler().fit_transform(data)
+#data=training_inputs[-1]
 print(neural_network.guess(data))
 
