@@ -43,7 +43,9 @@ class NeuralNetwork:
 
             i=0
             for weights in self.second_weights:
-                error= training_outputs-output_secondlayer[i]
+                error= np.sqrt((training_outputs-output_secondlayer[i])*(training_outputs-output_secondlayer[i])) #Error calculated using least squares
+                if iteration%100 ==0:
+                    print("Error = ", error)
                 adjustments = np.dot(inputs.T, error * self.sigmoid_derivative(output_secondlayer[i]))
                 newsecondweights.append(weights+adjustments)
                 i+=1
@@ -78,65 +80,43 @@ class NeuralNetwork:
 
         return results
 
-if __name__ == "__main__":
 
-    neural_network = NeuralNetwork()
+# Run the network
+neural_network = NeuralNetwork()
+"""
+print("Random starting synaptic weights: ")
+print(neural_network.first_weights)
+print(neural_network.second_weights)
+"""
+nbr_firstlayer=len(neural_network.first_weights)
 
-    print("Random starting synaptic weights: ")
+training_data = np.array([[60.30,58.37,17.40,880,8800,268,233000,7,2,8], 
+              [60.30,63.69,16.80,880,8200,292,233000,8,2,5], 
+              [35.80,33.62,12.60,850,3500,142,65317,3,2,1], 
+              [35.80,42.12,12.60,850,4300,188,76900,3,2,5],
+              [64.44,70.67,19.40,920,11500,408,390100,9,4,5],
+              [60.90,63.80,18.50,900,11800,320,297500,5,2,15], 
+              [60.10,62.80,16.30,920,11500,294,252650,6,2,13], 
+              [60.10,68.30,17.02,903,12000,344,254100,8,2,8], 
+              [26.00,31.68,9.86,850,3300,88,36500,2,2,17],
+              [28.72,36.24,10.55,850,3300,100,45000,2,2,32]])
 
-    print(neural_network.first_weights)
-    print(neural_network.second_weights)
-    nbr_firstlayer=len(neural_network.first_weights)
+training_inputs=StandardScaler().fit_transform(training_data)
 
-    training_data= np.array([[60.3,58.37,16.8,880,8800,289,233000,7,49500,361.6],
-            [60.3,63.69,16.8,880,8200,292,233000,8,51700,361.6],
-            [35.8,33.62,12.6,850,3500,142,65317,3,16500,125],
-            [35.8,39.47,12.6,850,4200,186,73700,3,20540,125],
-            [35.8,42.12,12.6,850,4300,188,76900,3,20240,125],
-            [64.44,70.67,19.4,920,11500,408,390100,9,70620,541.2],
-            [60.9,63.8,18.5,900,11800,320,297500,5,51250,427.8],
-            [64.8,73.86,18.5,920,12000,408,351543,7,68500,436.8],
-            [60.1,62.8,16.3,920,11500,294,252650,6,41050,360.5],
-            [26,31.68,9.86,850,3300,88,36500,2,9900,72.7]])
+training_outputs = np.array([[1,2,3,4,5,6,7,8,9,10]]).T
 
-    training_inputs=StandardScaler().fit_transform(training_data)
+neural_network.train(training_inputs, training_outputs, 1000)
 
-    training_outputs = np.array([[0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]]).T
+"""
+print("Synaptic weights after training: ")
+print(neural_network.first_weights)
+print(neural_network.second_weights)
+"""
 
-    neural_network.train(training_inputs, training_outputs, 100000)
-
-    print("Synaptic weights after training: ")
-
-    print(neural_network.first_weights)
-    print(neural_network.second_weights)
-
-    print("New situation: input data = ", A, B, C,D,E,F,G,H,I,J)
-
-    print("Output data: ")
-
-    A = str(input("Input 1: "))
-
-    B = str(input("Input 2: "))
-
-    C = str(input("Input 3: "))
-
-    D = str(input("Input 3: "))
-
-    E = str(input("Input 3: "))
-
-    F = str(input("Input 3: "))
-
-    G = str(input("Input 3: "))
-
-    H = str(input("Input 3: "))
-
-    I = str(input("Input 3: "))
-
-    J = str(input("Input 3: "))
-
-    data=np.array([A, B, C,D,E,F,G,H,I,J])
-    training_data=np.append(training_data,data,axis=0)
-    training_inputs=StandardScaler().fit_transform(training_data)
-    data=training_inputs[-1]
-    print(neural_network.guess(data))
+# This is the data of plane 1, so if the model is trained correctly it should output a [1.]
+data=np.array([[60.30,58.37,17.40,880,8800,268,233000,7,2,8]]) 
+training_data=np.append(training_data,data,axis=0)
+training_inputs=StandardScaler().fit_transform(training_data)
+data=training_inputs[-1]
+print(neural_network.guess(data))
 
