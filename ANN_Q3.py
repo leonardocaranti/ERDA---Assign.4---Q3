@@ -1,5 +1,6 @@
 from numpy import loadtxt
 import numpy as np
+import random as rand
 from keras.models import Sequential
 from keras.layers import Dense
 
@@ -26,7 +27,15 @@ def create_data(A, f, num_data_pts): #Number of data points must be divisible by
         #print(A_new[30])
     return A_new, f_new
 
-data, output = create_data(A, f, 1000)
+def create_data2(A, f, num_data_pts): #Number of data points must be divisible by 10
+    A_new  = np.zeros(shape=(num_data_pts, 10))
+    f_new = np.zeros(shape=(num_data_pts, 1))
+    for i in range(num_data_pts):
+        r = rand.randint(0,9)
+        A_new[i], f_new[i] = A[r], f[r]
+    return A_new, f_new
+
+data, output = create_data2(A, f, 1000)
 
 """
 # load the dataset
@@ -39,16 +48,16 @@ y = dataset[:,8]
 
 # define the keras model
 model = Sequential()
-model.add(Dense(12, input_dim=10, activation='relu'))  # Change to linear?
-#model.add(Dense(8, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
+model.add(Dense(1000, input_dim=10, activation='linear'))  # Change to linear?
+model.add(Dense(8, activation='relu'))
+model.add(Dense(1, activation='relu'))
 
 # compile the keras model
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']) # Change to least squares
+model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy']) # Change to least squares
 
 # fit the keras model on the dataset
-model.fit(data, output, epochs=150, batch_size=10)
+model.fit(data, output, epochs=50, batch_size=20)
 
 # evaluate the keras model
-_, accuracy = model.evaluate(X, y)
+_, accuracy = model.evaluate(data, output)
 print('Accuracy: %.2f' % (accuracy*100))
