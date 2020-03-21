@@ -1,12 +1,7 @@
 import numpy as np
 import matplotlib as plt
-import scipy as sp
-from scipy.optimize import minimize
 
-print(sp.version.version)
 
-def func(a, b, c):
-    return 3*a + 4*b - 7*c
 
 A = np.array([[1,2,3], [4,5,6], [7,8,9], [2,3,6]])
 
