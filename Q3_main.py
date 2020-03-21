@@ -3,7 +3,7 @@ import matplotlib as plt
 
 A = np.array([[1,2,3], [4,5,6], [7,8,9], [2,3,6]])
 
-f = np.array(1,2,3,4,5,6,7,8,9,10)
+f = np.array([[1],[2],[3],[4],[5],[6],[7],[8],[9],[10]])
 
 A_inv = np.linalg.inv(A)
 a = np.dot(A_inv, np.dot(f))
