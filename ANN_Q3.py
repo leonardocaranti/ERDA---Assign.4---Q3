@@ -39,8 +39,8 @@ A_2 = np.array([[26.00,31.68,9.86,850,3300,88,36500,2,2],
 
 # * PARAMETER DEFINITION * (you can change!)
 
-# Learning rate: how quickly the wheights are adjusted. 
-# close to one: adjusted quickly and allow for large variations between each iteration
+# Learning rate: how quickly the weights are adjusted. 
+# close to one: adjusted quickly and allows for large variations between each iteration
 # close to zero: adjusted much slower and small fluctuations per iteration
 lr = 0.001 
 
@@ -59,13 +59,13 @@ def baseline_model():
     # Model architecture. Comment out the neuron_2 line to only have 1 hidden layer. 
     # As this is a regression model the last neuron must have a linear activation function. The
     # other layers can be adjusted to have other ones (I like linear so sometimes I put lienar in everything, 
-    # but others use 'relu', 'sigmoid', ...)
+    # but others use 'relu', 'sigmoid', 'softmax', ...)
     model = Sequential()
     model.add(Dense(neurons_1, input_dim=10, kernel_initializer='normal', activation='linear'))
     #model.add(Dense(neurons_2, kernel_initializer='normal', activation='relu'))
     model.add(Dense(1, kernel_initializer='normal', activation='linear'))
 
-	# Model compilation: choose the loss function to evaluate the error and the method of optimising. 
+    # Model compilation: choose the loss function to evaluate the error and the method of optimising. 
     # Usually regression models use gradient descent which is SGD here (which takes the derivative of the loss function, 
     # like Dwight explained in class), but somehow this Adam one works way better for me! 
     optimiz = optimizers.Adam(learning_rate=lr)
@@ -91,10 +91,10 @@ print("Epochs: ", epochss_)
 print("Batch size: ", batch_sz)
 print("Number of neurons layer 1: ", neurons_1)
 
-# Calculate MSE
+# Calculate MSE (I wanted to calulculate it myself to check!)
 MSE = 0
 for i in range(len(prediction)):
     MSE += (prediction[i]-f[i][0])*(prediction[i]-f[i][0])
 
 print("Mean squared error: ", MSE)
-print(MSEs) # I don't know how to read this Mean Squared error number. One is supposed to be Standard Deviation also. 
+print(MSEs) # I don't know how to read this Mean Squared error number. The second one is supposed to be Standard Deviation. 
