@@ -85,7 +85,7 @@ MSEs.append([results.mean(), results.std()])
 estimator.fit(A, f) # Fit the original dataset once again for the optimised model defined above
 prediction = estimator.predict(A) # This outputs On
 print(np.array(prediction)) # On
-print(f) # What on should be 
+print(f) # What On should be 
 print("Learning rate: ", lr)
 print("Epochs: ", epochss_)
 print("Batch size: ", batch_sz)
