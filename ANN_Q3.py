@@ -37,7 +37,7 @@ A_2 = np.array([[26.00,31.68,9.86,850,3300,88,36500,2,2],
 # ---------------------- Regression model -------------------------
 
 
-# PARAMETER DEFINITION (you can change!)
+# * PARAMETER DEFINITION * (you can change!)
 
 # Learning rate: how quickly the wheights are adjusted. 
 # close to one: adjusted quickly and allow for large variations between each iteration
@@ -52,17 +52,17 @@ batch_sz = 32
 # Neurons: the size of each hidden layer. You can leave neurons_2 there even if you are only using
 # 1 hidden layer.
 neurons_1 = 10
-neurons_2 = 6
+neurons_2 = 8
 
-# NEURAL NETWORK MODEL DEFITION
+# * NEURAL NETWORK MODEL DEFITION *
 def baseline_model():
-    # Model architecture. Comment out the neuronr_2 line to only have 1 hidden layer. 
+    # Model architecture. Comment out the neuron_2 line to only have 1 hidden layer. 
     # As this is a regression model the last neuron must have a linear activation function. The
     # other layers can be adjusted to have other ones (I like linear so sometimes I put lienar in everything, 
-    # but others use 'relu', 'sigmoid', ...
+    # but others use 'relu', 'sigmoid', ...)
     model = Sequential()
-    model.add(Dense(neurons_1, input_dim=10, kernel_initializer='normal', activation='relu'))
-    model.add(Dense(neurons_2, kernel_initializer='normal', activation='relu'))
+    model.add(Dense(neurons_1, input_dim=10, kernel_initializer='normal', activation='linear'))
+    #model.add(Dense(neurons_2, kernel_initializer='normal', activation='relu'))
     model.add(Dense(1, kernel_initializer='normal', activation='linear'))
 
 	# Model compilation: choose the loss function to evaluate the error and the method of optimising. 
@@ -72,19 +72,29 @@ def baseline_model():
     model.compile(loss='mean_squared_error', optimizer=optimiz)
     return model
 
-# EVALUATION USING REGRESSION
+# * EVALUATION USING REGRESSION *
 MSEs = [] # Used to append mean squared error at the end, just to check
 cb = callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0, mode='auto') # Makes sure to stop the evaluations if the error fluctuates too much
 estimator = KerasRegressor(build_fn=baseline_model, epochs=epochss_, batch_size=batch_sz, verbose=2) # Change verbose to 0, 1 or 2 to choose what you want to see printed while the model evaluates
-kfold = KFold(n_splits=8) #Splits the dataset in a section of n_splits for training and 10-n_splits for evaluation of the model
+kfold = KFold(n_splits=9) #Splits the dataset in a section of n_splits for training and 10-n_splits for evaluation of the model
 results = cross_val_score(estimator, A, f, cv=kfold, fit_params={'callbacks': [cb]}) # Evaluates model 
-print("Baseline: %.2f (%.2f) MSE" % (results.mean(), results.std()))
+#print("Baseline: %.2f (%.2f) MSE" % (results.mean(), results.std()))
 MSEs.append([results.mean(), results.std()])
 
-# ESTIMATE On
+# * ESTIMATE On *
 estimator.fit(A, f) # Fit the original dataset once again for the optimised model defined above
 prediction = estimator.predict(A) # This outputs On
-print(prediction) # On
+print(np.array(prediction)) # On
 print(f) # What on should be 
-print("MES's")
+print("Learning rate: ", lr)
+print("Epochs: ", epochss_)
+print("Batch size: ", batch_sz)
+print("Number of neurons layer 1: ", neurons_1)
+
+# Calculate MSE
+MSE = 0
+for i in range(len(prediction)):
+    MSE += (prediction[i]-f[i][0])*(prediction[i]-f[i][0])
+
+print("Mean squared error: ", MSE)
 print(MSEs) # I don't know how to read this Mean Squared error number. One is supposed to be Standard Deviation also. 
